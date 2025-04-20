@@ -31,7 +31,6 @@ export default function RecipeRoutes(app) {
       : await dao.findAllRecipes();
     const user = await userDao.findUserById(req.params.userId);
 
-    // The feed is all recipes without ones that contain allergens
     const feed = recipes.filter((r) => {
       let containsAllergen = false;
       user.allergies.map((allergy) => {

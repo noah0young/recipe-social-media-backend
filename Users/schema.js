@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     bio: String,
     role: {
       type: String,
-      enum: ["User"],
+      enum: ["User", "Admin"],
       default: "User",
     },
     allergies: {
