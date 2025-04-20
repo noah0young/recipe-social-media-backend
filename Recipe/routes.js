@@ -52,14 +52,18 @@ export default function RecipeRoutes(app) {
     return await dao.findRecipeById(recipeId);
   };
   app.post("/api/recipes", createRecipe);
-  app.get("/api/recipes/", findAllRecipes);
+  app.get("/api/recipes", findAllRecipes);
   app.get("/api/recipes/:userId", getFeed);
   app.get("/api/recipes/:recipeId", findRecipeById);
   app.put("/api/recipes/:recipeId", updateRecipe);
   app.delete("/api/recipes/:recipeId", deleteRecipe);
   app.get("/api/recipes/usersSaved/:recipeId", async (req, res) => {
     const { recipeId } = req.params;
-    const status = await savedRecipesDao.findUsersForSavedRecipe(recipeId);
+    const { search } = req.query;
+    const status = await savedRecipesDao.findUsersForSavedRecipe(
+      recipeId,
+      search
+    );
     res.send(status);
   });
 }
