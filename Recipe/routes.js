@@ -13,9 +13,11 @@ export default function RecipeRoutes(app) {
   };
 
   const findAllRecipes = async (req, res) => {
-    const { name } = req.query;
-    if (name) {
-      const recipes = await dao.findRecipesByPartialName(recipes);
+    const { search } = req.query;
+    console.log("Earlier search = " + search);
+    if (search) {
+      console.log("search = " + search);
+      const recipes = await dao.findRecipesByPartialName(search);
       res.json(recipes);
       return;
     }
@@ -23,7 +25,10 @@ export default function RecipeRoutes(app) {
     res.json(recipes);
   };
   const getFeed = async (req, res) => {
-    const recipes = await dao.findAllRecipes();
+    const { search } = req.query;
+    const recipes = search
+      ? await dao.findRecipesByPartialName(search)
+      : await dao.findAllRecipes();
     const user = await userDao.findUserById(req.params.userId);
 
     // The feed is all recipes without ones that contain allergens

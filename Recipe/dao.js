@@ -4,7 +4,6 @@ export const createRecipe = (recipe) => {
   const newRecipe = { ...recipe, _id: uuidv4() };
   return model.create(newRecipe);
 };
-
 export const findAllRecipes = () => model.find();
 export const findRecipeById = (recipeId) => model.findById(recipeId);
 export const updateRecipe = (recipeId, recipe) =>
@@ -13,6 +12,6 @@ export const deleteRecipe = (userId) => model.deleteOne({ _id: userId });
 export const findRecipesByPartialName = (partialName) => {
   const regex = new RegExp(partialName, "i"); // 'i' makes it case-insensitive
   return model.find({
-    $or: [{ firstName: { $regex: regex } }, { lastName: { $regex: regex } }],
+    name: { $regex: regex },
   });
 };
