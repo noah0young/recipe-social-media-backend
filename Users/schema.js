@@ -9,8 +9,8 @@ const userSchema = new mongoose.Schema(
     bio: String,
     role: {
       type: String,
-      enum: ["USER"],
-      default: "USER",
+      enum: ["User"],
+      default: "User",
     },
     allergies: {
       type: Array,
