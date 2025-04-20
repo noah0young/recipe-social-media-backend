@@ -20,6 +20,14 @@ const userSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    savedRecipes: {
+      type: Array, // an array of string ids
+      default: [],
+    },
+    myRecipes: {
+      type: Array, // an array of string ids
+      default: [],
+    },
   },
   { collection: "users" }
 );

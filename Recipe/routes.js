@@ -2,43 +2,34 @@ import * as dao from "./dao.js";
 export default function RecipeRoutes(app) {
   const createRecipe = async (req, res) => {
     const recipe = await dao.createRecipe(req.body);
-    res.json(user);
+    res.json(recipe);
   };
 
   const deleteRecipe = async (req, res) => {
-    const status = await dao.deleteRecipe(req.params.userId);
+    const status = await dao.deleteRecipe(req.params.recipeId);
     res.json(status);
   };
 
   const findAllRecipes = async (req, res) => {
-    const { role, name } = req.query;
-    if (role) {
-      const users = await dao.findUsersByRole(role);
-      res.json(users);
-      return;
-    }
+    const { name } = req.query;
     if (name) {
-      const users = await dao.findRecipesByPartialName(name);
-      res.json(users);
+      const recipes = await dao.findRecipesByPartialName(recipes);
+      res.json(recipes);
       return;
     }
-    const users = await dao.findAllRecipes();
-    res.json(users);
+    const recipes = await dao.findAllRecipes();
+    res.json(recipes);
   };
   const findRecipeById = async (req, res) => {
-    const user = await dao.findRecipeById(req.params.userId);
-    res.json(user);
+    const recipe = await dao.findRecipeById(req.params.recipeId);
+    res.json(recipe);
   };
 
   const updateRecipe = async (req, res) => {
-    const userId = req.params.userId;
-    const userUpdates = req.body;
-    await dao.updateRecipe(userId, userUpdates);
-    const currentUser = req.session["currentUser"];
-    if (currentUser && currentUser._id === userId) {
-      req.session["currentUser"] = { ...currentUser, ...userUpdates };
-    }
-    res.json(req.session["currentUser"]);
+    const recipeId = req.params.recipeId;
+    const recipeUpdates = req.body;
+    await dao.updateRecipe(recipeId, recipeUpdates);
+    return await dao.findRecipeById(recipeId);
   };
   app.post("/api/recipes", createRecipe);
   app.get("/api/recipes", findAllRecipes);

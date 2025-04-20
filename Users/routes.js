@@ -1,11 +1,6 @@
 import * as dao from "./dao.js";
 import * as followersDao from "../Followers/dao.js";
 export default function UserRoutes(app) {
-  const createUser = async (req, res) => {
-    const user = await dao.createUser(req.body);
-    res.json(user);
-  };
-
   const deleteUser = async (req, res) => {
     const status = await dao.deleteUser(req.params.userId);
     res.json(status);
@@ -122,7 +117,6 @@ export default function UserRoutes(app) {
     const status = await followersDao.unfollow(userID, otherId);
     res.send(status);
   });
-  app.post("/api/users", createUser);
   app.get("/api/users", findAllUsers);
   app.get("/api/users/:userId", findUserById);
   app.put("/api/users/:userId", updateUser);
