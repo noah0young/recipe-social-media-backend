@@ -82,6 +82,17 @@ export default function UserRoutes(app) {
     const myFollowing = await followersDao.findFollowingForUser(uid);
     res.json(myFollowing);
   };
+  const amFollowing = async (req, res) => {
+    const currentUser = req.session["currentUser"];
+    if (!currentUser) {
+      res.sendStatus(401);
+      return;
+    }
+    const curUserId = currentUser._id;
+    let { uid } = req.params;
+    const followingBetween = await followersDao.amFollowing(curUserId, uid);
+    res.json(followingBetween);
+  };
   const findFollowers = async (req, res) => {
     const currentUser = req.session["currentUser"];
     if (!currentUser) {
@@ -126,5 +137,6 @@ export default function UserRoutes(app) {
   app.post("/api/users/signout", signout);
   app.post("/api/users/profile", profile);
   app.get("/api/users/:uid/myfollowing", findFollowing);
+  app.get("/api/users/amfollowing/:uid", amFollowing);
   app.get("/api/users/:uid/myfollowers", findFollowers);
 }

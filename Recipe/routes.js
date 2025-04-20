@@ -31,8 +31,8 @@ export default function RecipeRoutes(app) {
       user.allergies.map((allergy) => {
         containsAllergen =
           containsAllergen ||
-          r.ingredients.indexOf(allergy) !== -1 ||
-          r.description.indexOf(allergy) !== -1;
+          r.ingredients.toLowerCase().indexOf(allergy.toLowerCase()) !== -1 ||
+          r.description.toLowerCase().indexOf(allergy.toLowerCase()) !== -1;
       });
       return !containsAllergen;
     });
