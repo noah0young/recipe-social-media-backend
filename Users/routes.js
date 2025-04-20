@@ -1,5 +1,6 @@
 import * as dao from "./dao.js";
 import * as followersDao from "../Followers/dao.js";
+import * as savedRecipesDao from "../SavedRecipes/dao.js";
 export default function UserRoutes(app) {
   const deleteUser = async (req, res) => {
     const status = await dao.deleteUser(req.params.userId);
@@ -106,6 +107,16 @@ export default function UserRoutes(app) {
     const myFollowers = await followersDao.findFollowersForUser(uid);
     res.json(myFollowers);
   };
+
+  app.get("/api/users", findAllUsers);
+  app.get("/api/users/:userId", findUserById);
+  app.put("/api/users/:userId", updateUser);
+  app.delete("/api/users/:userId", deleteUser);
+  app.post("/api/users/signup", signup);
+  app.post("/api/users/signin", signin);
+  app.post("/api/users/signout", signout);
+  app.post("/api/users/profile", profile);
+  // Following Routes
   app.put("/api/users/follow/:otherId", async (req, res) => {
     const currentUser = req.session["currentUser"];
     if (!currentUser) {
@@ -128,15 +139,35 @@ export default function UserRoutes(app) {
     const status = await followersDao.unfollow(userID, otherId);
     res.send(status);
   });
-  app.get("/api/users", findAllUsers);
-  app.get("/api/users/:userId", findUserById);
-  app.put("/api/users/:userId", updateUser);
-  app.delete("/api/users/:userId", deleteUser);
-  app.post("/api/users/signup", signup);
-  app.post("/api/users/signin", signin);
-  app.post("/api/users/signout", signout);
-  app.post("/api/users/profile", profile);
   app.get("/api/users/:uid/myfollowing", findFollowing);
   app.get("/api/users/amfollowing/:uid", amFollowing);
   app.get("/api/users/:uid/myfollowers", findFollowers);
+  // Save Recipe Routes
+  app.put("/api/users/saveRecipe/:recipeId", async (req, res) => {
+    const currentUser = req.session["currentUser"];
+    if (!currentUser) {
+      res.sendStatus(401);
+      return;
+    }
+    const userID = currentUser._id;
+    const { recipeId } = req.params;
+    const status = await savedRecipesDao.saveRecipe(userID, recipeId);
+    res.send(status);
+  });
+  app.put("/api/users/unsaveRecipe/:recipeId", async (req, res) => {
+    const currentUser = req.session["currentUser"];
+    if (!currentUser) {
+      res.sendStatus(401);
+      return;
+    }
+    const userID = currentUser._id;
+    const { recipeId } = req.params;
+    const status = await savedRecipesDao.unsaveRecipe(userID, recipeId);
+    res.send(status);
+  });
+  app.get("/api/users/savedRecipes/:uid", async (req, res) => {
+    const { uid } = req.params;
+    const saved = await savedRecipesDao.findSavedRecipeForUser(uid);
+    res.send(saved);
+  });
 }

@@ -1,5 +1,6 @@
 import * as dao from "./dao.js";
 import * as userDao from "../Users/dao.js";
+import * as savedRecipesDao from "../SavedRecipes/dao.js";
 export default function RecipeRoutes(app) {
   const createRecipe = async (req, res) => {
     const recipe = await dao.createRecipe(req.body);
@@ -56,4 +57,9 @@ export default function RecipeRoutes(app) {
   app.get("/api/recipes/:recipeId", findRecipeById);
   app.put("/api/recipes/:recipeId", updateRecipe);
   app.delete("/api/recipes/:recipeId", deleteRecipe);
+  app.get("/api/recipes/usersSaved/:recipeId", async (req, res) => {
+    const { recipeId } = req.params;
+    const status = await savedRecipesDao.findUsersForSavedRecipe(recipeId);
+    res.send(status);
+  });
 }
